@@ -9,6 +9,11 @@
 #include <string.h>
 #include <ctype.h>
 
+#ifdef WINDOWS
+    #define WIN32_MEAN_AND_LEAN
+    #include <Windows.h>
+#endif
+
 int main(int argc, char const *argv[]) {
 
     // Get input
@@ -40,17 +45,16 @@ int main(int argc, char const *argv[]) {
         sprintf(cmd, "printf '%s' | pbcopy", string);
         system(cmd);
     #else
-        const char* output = "Test";
-        const size_t len = strlen(output) + 1;
+        const size_t len = strlen(string) + 1;
         HGLOBAL hMem =  GlobalAlloc(GMEM_MOVEABLE, len);
-        memcpy(GlobalLock(hMem), output, len);
+        memcpy(GlobalLock(hMem), string, len);
         GlobalUnlock(hMem);
         OpenClipboard(0);
         EmptyClipboard();
         SetClipboardData(CF_TEXT, hMem);
         CloseClipboard();
     #endif
-    
+
     printf("Copied to clipboard.\n");
 
     // Exit
