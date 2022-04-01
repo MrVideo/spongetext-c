@@ -1,3 +1,9 @@
+#ifdef __GNUC__
+    #define GNU
+#else
+    #define WINDOWS
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,8 +36,21 @@ int main(int argc, char const *argv[]) {
             string[i] = '\0'; // This removes the trailing newline to prevent it from being copied to the clipboard
     }
     char cmd[100];
-    sprintf(cmd, "printf '%s' | pbcopy", string);
-    system(cmd);
+    #ifdef GNU
+        sprintf(cmd, "printf '%s' | pbcopy", string);
+        system(cmd);
+    #else
+        const char* output = "Test";
+        const size_t len = strlen(output) + 1;
+        HGLOBAL hMem =  GlobalAlloc(GMEM_MOVEABLE, len);
+        memcpy(GlobalLock(hMem), output, len);
+        GlobalUnlock(hMem);
+        OpenClipboard(0);
+        EmptyClipboard();
+        SetClipboardData(CF_TEXT, hMem);
+        CloseClipboard();
+    #endif
+    
     printf("Copied to clipboard.\n");
 
     // Exit
