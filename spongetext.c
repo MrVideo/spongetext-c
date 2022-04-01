@@ -24,6 +24,16 @@ int main(int argc, char const *argv[]) {
     // Print spongified text
     printf("\nSpongified text: %s\n", string);
 
+    // Copy the string to the clipboard
+    for(int i = 0; i < strlen(string); i++) {
+        if(string[i] == '\n')
+            string[i] = '\0'; // This removes the trailing newline to prevent it from being copied to the clipboard
+    }
+    char cmd[100];
+    sprintf(cmd, "printf '%s' | pbcopy", string);
+    system(cmd);
+    printf("Copied to clipboard.\n");
+
     // Exit
     return 0;
 }

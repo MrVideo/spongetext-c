@@ -1,2 +1,9 @@
 # VS Code configuration files
 .vscode
+
+# System files
+.DS_Store
+
+# Compilation files and binary
+spongetext
+spongetext.dSYM
